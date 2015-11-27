@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class AllegroClient extends WebServiceGatewaySupport {
 
     private static final Logger log = LoggerFactory.getLogger(AllegroClient.class);
+    protected static final int ROOT_CATEGORY_ID = 0;
 
     @Value("${allegro.api.key}")
     private String ALLEGRO_API_KEY;
@@ -26,7 +28,7 @@ public class AllegroClient extends WebServiceGatewaySupport {
     @Autowired
     Converter converter;
 
-    public List<AllegroItem> getAllegroItems(Long categoryId, int itemsNumber) {
+    public List<AllegroItem> getAllegroItems(int categoryId, int itemsNumber) {
 
         log.info("calling Allegro Api service " + Constants.DO_GET_ITEMS_LIST_REQUEST_OPERATION);
 
@@ -42,19 +44,18 @@ public class AllegroClient extends WebServiceGatewaySupport {
     }
 
 
-    public List<AllegroItem> getUniqueAllegroItems(Long categoryId, int itemsNumber) {
+    public List<AllegroItem> getUniqueAllegroItems(int categoryId, int itemsNumber) {
 
         List<AllegroItem> itemList = getAllegroItems(categoryId, itemsNumber);
 
         return itemList.stream().distinct().collect(Collectors.toList());
     }
 
-    /**
-         * Method grabs main categories
-         * should be catched, because Allegro does not often change ID of main tree categories
-         * @return
-         */
-    public List<AllegroCategory> getMainAllegroCategories() {
+    /** Method grabs main categories
+     * should be catched, because Allegro does not often change ID of main tree categories
+     * @return
+     */
+    public List<AllegroCategory> getAllegroCategories() {
 
         log.info("calling Allegro Api service " + Constants.DO_GET_CATS_DATA_LIMIT_REQUEST_OPERATION);
 
@@ -72,7 +73,18 @@ public class AllegroClient extends WebServiceGatewaySupport {
         return converter.convertDoGetCatsDataLimitResponse(response);
     }
 
-    private DoGetItemsListRequest buildRequestForDoGetItemsList(Long categoryId, int itemsNumber) {
+    public List<AllegroCategory> getRootAllegroCategories() {
+        List<AllegroCategory> rootCategorieyList = new ArrayList<>();
+
+        for (AllegroCategory category : getAllegroCategories()) {
+            if (category.getParent() == ROOT_CATEGORY_ID) {
+                rootCategorieyList.add( category );
+            }
+        }
+        return rootCategorieyList;
+    }
+
+        private DoGetItemsListRequest buildRequestForDoGetItemsList(int categoryId, int itemsNumber) {
 
         if (ALLEGRO_API_KEY == null || ALLEGRO_API_KEY.length() == 0) {
             log.error("API key not existing!");
@@ -80,7 +92,7 @@ public class AllegroClient extends WebServiceGatewaySupport {
         }
 
         ArrayOfString arrayofCategory = new ArrayOfString();
-        arrayofCategory.getItem().add(categoryId.toString());
+        arrayofCategory.getItem().add( String.valueOf(categoryId) );
 
         FilterOptionsType filterOptionsType = new FilterOptionsType();
         filterOptionsType.setFilterId("category");

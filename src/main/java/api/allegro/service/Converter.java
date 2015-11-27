@@ -55,6 +55,11 @@ public class Converter {
         return null;
     }
 
+    /**
+     * Method picks first large photo of item and returns it's Url
+     * @param photoList
+     * @return
+     */
     private String pickLargePhoto(List<PhotoInfoType> photoList) {
 
         for ( PhotoInfoType photo : photoList) {
@@ -66,7 +71,11 @@ public class Converter {
     }
 
 
-
+    /**
+     * Method converts response type to Category List
+     * @param response
+     * @return
+     */
     public List<AllegroCategory> convertDoGetCatsDataLimitResponse(DoGetCatsDataLimitResponse response) {
 
         log.info("Converting " + response.getClass().getSimpleName() + " to " + AllegroCategory.class.getSimpleName());
@@ -75,7 +84,7 @@ public class Converter {
             List<AllegroCategory> allegroCategoryList = new ArrayList<>();
 
             for ( CatInfoType cat : response.getCatsList().getItem()) {
-                AllegroCategory allegorCategory = new AllegroCategory(Long.parseLong(String.valueOf(cat.getCatId())), cat.getCatName());
+                AllegroCategory allegorCategory = new AllegroCategory(cat.getCatId(), cat.getCatParent(), cat.getCatName());
                 allegroCategoryList.add(allegorCategory);
             }
             return allegroCategoryList;

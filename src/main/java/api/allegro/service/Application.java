@@ -27,7 +27,7 @@ public class Application {
     public void getCats() {
         log.info("doing PostConstruct jobs...");
 
-        allegroCatsComponent.setCatsList(allegroClient.getMainAllegroCategories());
+        allegroCatsComponent.setCatsList(allegroClient.getRootAllegroCategories());
     }
 }
 

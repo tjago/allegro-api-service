@@ -9,8 +9,8 @@ public class Constants {
     protected static final int ITEMS_FETCHED_AT_ONCE = 20; //TODO extract to options
 
     //hardcoded cats for test class
-    public static final Long CATEGORY_KSIAZKI_I_KOMIKSY_ID = 7L;
-    public static final Long CATEGORY_KONSOLEI_AUTOMATY_ID = 122_233L;
+    public static final int CATEGORY_KSIAZKI_I_KOMIKSY_ID = 7;
+    public static final int CATEGORY_KONSOLEI_AUTOMATY_ID = 122_233;
 
 
     public static final String ALLEGRO_SERVICE_URI = "https://webapi.allegro.pl/service.php";

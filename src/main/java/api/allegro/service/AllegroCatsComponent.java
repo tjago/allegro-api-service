@@ -1,5 +1,7 @@
 package api.allegro.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -14,6 +16,8 @@ import java.util.Random;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AllegroCatsComponent {
+
+    private static final Logger log = LoggerFactory.getLogger(AllegroCatsComponent.class);
 
     @Autowired
     AllegroClient allegroClient;
@@ -30,9 +34,12 @@ public class AllegroCatsComponent {
         this.catsList = catsList;
     }
 
-    public Long getRandomCatId() {
+    public int getRandomCatId() {
 
         int index = random.nextInt(catsList.size());
+
+        log.info("Chosen category : id={} name={}", catsList.get( index ).getId(), catsList.get( index ).getName() );
+
         return catsList.get( index ).getId();
     }
 }
