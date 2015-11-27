@@ -8,26 +8,26 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class GeneralController {
+public class AllegroRestController {
 
     @Autowired
     private AllegroClient allegroClient;
 
     @Autowired
-    private MockingService mockingService;
+    private AllegroCatsComponent catsComponent;
 
     @RequestMapping(value = "/")
     public String index(Model model) {
-        return "<h2>snapbuyer Service App</h2>";
+        return "<h2>Allegro api service</h2>";
     }
 
     @RequestMapping("/allegro/offers")
     public List<AllegroItem> allegroOffers() {
-        return allegroClient.getAllegroItems(Constants.CATEGORY_KSIAZKI_I_KOMIKSY_ID, Constants.ITEMS_FETCHED_AT_ONCE);
+        return allegroClient.getUniqueAllegroItems(catsComponent.getRandomCatId(), Constants.ITEMS_FETCHED_AT_ONCE);
     }
 
     @RequestMapping("/allegro/preferredoffers")
     public List<AllegroItem> allegroOffersPreffered() {
-        return allegroOffers(); //TODO implement preferred Offers functionality
+        return allegroClient.getAllegroItems(catsComponent.getRandomCatId(), Constants.ITEMS_FETCHED_AT_ONCE); //TODO implement preferred Offers functionality
     }
 }
