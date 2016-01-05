@@ -14,7 +14,6 @@ import java.util.Map;
 @Configuration
 public class AllegroClientConfiguration {
 
-
     @Bean
     public Jaxb2Marshaller marshaller() {
         Map<String, String> properties = new HashMap<>();
@@ -28,7 +27,8 @@ public class AllegroClientConfiguration {
 
     @Bean
     public AllegroClient allegroClient(Jaxb2Marshaller marshaller) {
-        AllegroClient client = new AllegroClient();
+        Converter converter = new Converter();
+        AllegroClient client = new  AllegroClient(converter);
         client.setDefaultUri(Constants.ALLEGRO_SERVICE_URI);
         client.setMarshaller(marshaller);
         client.setUnmarshaller(marshaller);

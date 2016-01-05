@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Random;
@@ -19,12 +20,15 @@ public class AllegroCatsComponent {
 
     private static final Logger log = LoggerFactory.getLogger(AllegroCatsComponent.class);
 
-    @Autowired
-    AllegroClient allegroClient;
-
     private Random random = new Random();
     private List<AllegroCategory> catsList;
+    private final AllegroClient allegroClient;
 
+    @Autowired
+    public AllegroCatsComponent(AllegroClient allegroClient) {
+        Assert.notNull(allegroClient);
+        this.allegroClient = allegroClient;
+    }
 
     public List<AllegroCategory> getCats() {
         return catsList;

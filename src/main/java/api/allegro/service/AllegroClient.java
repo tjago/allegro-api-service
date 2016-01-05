@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.ws.client.core.support.WebServiceGatewaySupport;
 import org.springframework.ws.soap.client.core.SoapActionCallback;
 
@@ -25,8 +26,13 @@ public class AllegroClient extends WebServiceGatewaySupport {
     @Value("${allegro.api.key}")
     private String ALLEGRO_API_KEY;
 
+    private final Converter converter;
+
     @Autowired
-    Converter converter;
+    public AllegroClient(Converter converter) {
+        Assert.notNull(converter);
+        this.converter = converter;
+    }
 
     public List<AllegroItem> getAllegroItems(int categoryId, int itemsNumber) {
 

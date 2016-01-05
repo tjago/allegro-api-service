@@ -2,6 +2,7 @@ package api.allegro.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,11 +11,16 @@ import java.util.List;
 @RestController
 public class AllegroRestController {
 
-    @Autowired
     private AllegroClient allegroClient;
+    private AllegroCatsComponent catsComponent;
 
     @Autowired
-    private AllegroCatsComponent catsComponent;
+    public AllegroRestController(AllegroClient allegroClient, AllegroCatsComponent allegroCatsComponent) {
+        Assert.notNull(allegroCatsComponent);
+        Assert.notNull(allegroClient);
+        this.allegroClient = allegroClient;
+        this.catsComponent = allegroCatsComponent;
+    }
 
     @RequestMapping(value = "/")
     public String index(Model model) {

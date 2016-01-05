@@ -15,9 +15,10 @@ import java.util.List;
 public class Converter {
 
     private static final Logger log = LoggerFactory.getLogger(Converter.class);
-    protected static final String SMALL_PHOTO = "small";
-    protected static final String MEDIUM_PHOTO = "medium";
-    protected static final String LARGE_PHOTO = "large";
+
+    private static final String SMALL_PHOTO = "small";
+    private static final String MEDIUM_PHOTO = "medium";
+    private static final String LARGE_PHOTO = "large";
 
     public List<AllegroItem> convertDoGetItemsListResponse(DoGetItemsListResponse response) {
 
