@@ -3,6 +3,7 @@ package api.allegro.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +28,7 @@ public class AllegroRestController {
         return "<h2>Allegro api service</h2>";
     }
 
+    @CrossOrigin
     @RequestMapping("/allegro/offers")
     public List<AllegroItem> allegroOffers() {
         return allegroClient.getUniqueAllegroItems(catsComponent.getRandomCatId(), Constants.ITEMS_FETCHED_AT_ONCE);
