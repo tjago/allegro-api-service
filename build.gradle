@@ -12,9 +12,12 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath('io.spring.gradle:dependency-management-plugin:0.5.2.RELEASE')
-        classpath 'org.cloudfoundry:cf-gradle-plugin:1.1.2'
+        classpath('org.cloudfoundry:cf-gradle-plugin:1.1.2')
+        classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
+
+group = 'tjago'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
@@ -22,14 +25,13 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'cloudfoundry' //deploy app to cloudfactory with: gradle cfPush
-//apply plugin: 'war'
+apply plugin: 'docker'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-//    maven { url 'http://repo.spring.io/milestone' }
     maven { url "https://repo.spring.io/libs-snapshot" }
 }
 
@@ -54,7 +56,7 @@ task genJaxb {
                 produces(dir: sourcesDir, includes: "**/*.java")
             }
 
-            javac(destdir: classesDir, source: 1.6, target: 1.6, debug: true,
+            javac(destdir: classesDir, source: 1.8, target: 1.8, debug: true,
                     debugLevel: "lines,vars,source",
                     classpath: configurations.jaxb.asPath) {
                 src(path: sourcesDir)
@@ -91,11 +93,7 @@ jar {
     version = '0.6'
     from genJaxb.classesDir
 }
-/*
-war {
-    baseName = 'allegro-api-service'
-    version = '0.5-SNAPSHOT'
-}*/
+
 configurations {
     providedRuntime
 }
@@ -116,6 +114,18 @@ cloudfoundry {
     target = "https://api.run.pivotal.io"
     memory = 512
     instances = 1
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+    push = true
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
 }
 
 //uncomment for debug
